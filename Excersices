@@ -1,0 +1,871 @@
+import sys
+import math
+
+# --- Helper Function for Input Simulation (for demonstration/testing) ---
+# In a real script, you would replace these calls with input()
+# This function simulates input for all tasks 1-20
+def get_simulated_input(task_num, prompt):
+    """Simulates user input based on the task number and prompt."""
+    if task_num == 4:
+        return '13' # Binary: 1101 (Odd, shifted: 110100 = 52, not divisible by 8)
+    elif task_num == 5 or task_num == 10:
+        if "number 1" in prompt or "first number" in prompt: return '15'
+        if "operator" in prompt: return '/'
+        if "number 2" in prompt or "second number" in prompt: return '3'
+    elif task_num == 6:
+        return '42:hello:True'
+    elif task_num == 8:
+        if "username" in prompt: return 'admin'
+        if "pin" in prompt: return '9999'
+    elif task_num == 9:
+        return '7'
+    elif task_num == 13:
+        if "Input A" in prompt: return '1'
+        if "Input B" in prompt: return '0'
+    elif task_num == 14:
+        return '21' # Binary: 10101 (5 bits - Odd number of bits)
+    elif task_num == 15:
+        return '73' # Score 73 (Prime, C grade)
+    elif task_num == 16:
+        if "numerator" in prompt: return '10'
+        if "denominator" in prompt: return '-2'
+    elif task_num == 18:
+        return '52*8'
+    elif task_num == 19:
+        return '45' # Divisible by 3, 5, 15, Odd, Medium
+    elif task_num == 20:
+        return '479' # Digits: 4, 7, 9. Largest: 9. Increasing: No. Sum (20): Even.
+
+    # Fallback to real input for non-simulated tasks
+    return input(prompt)
+
+# --- TASK 1: Identity Swap With No Temporary Variable ---
+print("=" * 10 + " TASK 1: Identity Swap " + "=" * 10)
+
+a = 10
+b = 20
+c = 30
+
+print(f"Before swap: a={a}, b={b}, c={c}")
+
+# Single chained assignment swap: (a -> c, b -> a, c -> b)
+a, b, c = b, c, a
+
+print(f"After swap: a={a}, b={b}, c={c}")
+print("=" * 10 + " End of Task 1 " + "=" * 10)
+
+
+# --- TASK 2: Type Reconstruction ---
+print("\n" + "=" * 10 + " TASK 2: Type Reconstruction " + "=" * 10)
+
+x = "42"
+y = 3.14159
+z = True
+
+# Rebuilding types:
+x = float(x)   # "42" -> 42.0 (float)
+y = str(y)     # 3.14159 -> "3.14159" (string)
+z = int(z)     # True -> 1 (integer)
+
+print("--- Rebuilt Variables ---")
+print(f"x: Value={x}, Type={type(x)}")
+print(f"y: Value='{y}', Type={type(y)}")
+print(f"z: Value={z}, Type={type(z)}")
+print("=" * 10 + " End of Task 2 " + "=" * 10)
+
+
+# --- TASK 3: Operator Precedence Mystery ---
+print("\n" + "=" * 10 + " TASK 3: Operator Precedence Mystery " + "=" * 10)
+
+# Operator Precedence (Highest to Lowest):
+# 1. ** (Power)
+# 2. *, /, //, % (Multiplication, Division, Floor Div, Modulo - Left to Right)
+# 3. +, - (Addition, Subtraction - Left to Right)
+result = 10 + 3 * 2 ** 3 // 4 % 6 - 7
+
+# Step-by-step breakdown:
+# 1. Power (**): 2 ** 3 = 8
+# result = 10 + 3 * 8 // 4 % 6 - 7
+#
+# 2. Multiplication/Division/Modulo (L to R)
+# 2a. 3 * 8 = 24
+# result = 10 + 24 // 4 % 6 - 7
+# 2b. 24 // 4 = 6 (Integer division)
+# result = 10 + 6 % 6 - 7
+# 2c. 6 % 6 = 0 (Modulo)
+# result = 10 + 0 - 7
+#
+# 3. Addition/Subtraction (L to R)
+# 3a. 10 + 0 = 10
+# result = 10 - 7
+# 3b. 10 - 7 = 3
+# result = 3
+print(f"Result: {result}")
+print("=" * 10 + " End of Task 3 " + "=" * 10)
+
+
+# --- TASK 4: Binary & Logical Blend ---
+print("\n" + "=" * 10 + " TASK 4: Binary & Logical Blend " + "=" * 10)
+
+try:
+    original_num_str = get_simulated_input(4, "Task 4: Enter an integer:")
+    original_num = int(original_num_str)
+
+    # 1. Shift left by 2 (Equivalent to multiplying by 4)
+    shifted_num = original_num << 2
+
+    # 2. Convert to binary
+    original_binary = bin(original_num)
+    shifted_binary = bin(shifted_num)
+
+    # 3. Check logical conditions
+    # Check 1: Is shifted number divisible by 8?
+    is_shifted_divisible_by_8 = (shifted_num % 8) == 0
+
+    # Check 2: Is original number even?
+    is_original_even = (original_num % 2) == 0
+
+    # Final combined check
+    final_logical_check = is_shifted_divisible_by_8 and is_original_even
+
+    print("\n--- RESULTS ---")
+    print(f"Original Number: {original_num}")
+    print(f"Original Binary: {original_binary}")
+    print(f"Shifted Number:  {shifted_num}")
+    print(f"Shifted Binary:  {shifted_binary}")
+    print("-" * 15)
+    print(f"Shifted Divisible by 8: {is_shifted_divisible_by_8}")
+    print(f"Original Number is Even: {is_original_even}")
+    print(f"Final AND Check: {final_logical_check}")
+
+except ValueError:
+    print("Error: Invalid input. Please enter a valid integer.")
+print("=" * 10 + " End of Task 4 " + "=" * 10)
+
+
+# --- TASK 5: Lambda-Based Calculator (Basic Version) ---
+print("\n" + "=" * 10 + " TASK 5: Lambda-Based Calculator " + "=" * 10)
+
+# Create a dictionary of lambda functions
+lambda_operators = {
+    '+': lambda a, b: a + b,
+    '-': lambda a, b: a - b,
+    '*': lambda a, b: a * b,
+    '/': lambda a, b: a / b,
+    '**': lambda a, b: a ** b,
+    '%': lambda a, b: a % b
+}
+
+try:
+    num1 = float(get_simulated_input(5, "Task 5: Enter number 1:"))
+    operator = get_simulated_input(5, "Task 5: Enter operator (+, -, *, /, **, %):")
+    num2 = float(get_simulated_input(5, "Task 5: Enter number 2:"))
+
+    if operator not in lambda_operators:
+        raise ValueError("Invalid operator selected.")
+
+    if operator == '/' and num2 == 0:
+        raise ZeroDivisionError("Error: Cannot divide by zero.")
+
+    # Apply the correct lambda function
+    calculation = lambda_operators[operator]
+    result = calculation(num1, num2)
+
+    print(f"\nResult: {num1} {operator} {num2} = {result}")
+
+except ValueError as e:
+    print(f"Input Error: {e}")
+except ZeroDivisionError as e:
+    print(f"Calculation Error: {e}")
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")
+print("=" * 10 + " End of Task 5 " + "=" * 10)
+
+
+# --- TASK 6: Casting Engine ---
+print("\n" + "=" * 10 + " TASK 6: Casting Engine " + "=" * 10)
+
+try:
+    user_input = get_simulated_input(6, "Task 6: Enter input in format number:string:boolean (e.g., 42:hello:True):")
+    parts = user_input.split(':')
+
+    if len(parts) != 3:
+        raise ValueError("Input must contain exactly three parts separated by colons.")
+
+    # 1. Convert number part (float is safer for general numbers)
+    num_val = float(parts[0].strip())
+
+    # 2. String part (already a string, just clean spaces)
+    text_val = parts[1].strip()
+
+    # 3. Boolean part (convert common truthy/falsy strings)
+    bool_str = parts[2].strip().lower()
+    flag_val = bool_str in ('true', '1', 't', 'yes') # True if it matches one of these
+
+    # Build the dictionary
+    data_dict = {
+        'num': num_val,
+        'text': text_val,
+        'flag': flag_val
+    }
+
+    print("\n--- CASTING RESULTS ---")
+    print(f"num: Value={data_dict['num']}, Type={type(data_dict['num'])}")
+    print(f"text: Value='{data_dict['text']}', Type={type(data_dict['text'])}")
+    print(f"flag: Value={data_dict['flag']}, Type={type(data_dict['flag'])}")
+
+except ValueError as e:
+    print(f"Casting Error: {e}")
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")
+print("=" * 10 + " End of Task 6 " + "=" * 10)
+
+
+# --- TASK 7: Rounding Lab ---
+print("\n" + "=" * 10 + " TASK 7: Rounding Lab " + "=" * 10)
+
+price = 17.58642
+
+# 1. Price rounded to 2 decimals (standard round half to even for .5 in Python 3)
+r_2 = round(price, 2)
+
+# 2. Price rounded up (ceiling)
+r_up = math.ceil(price)
+
+# 3. Price rounded down (floor)
+r_down = math.floor(price)
+
+# 4. Price rounded to nearest 0.05
+# Formula: round(price / 0.05) * 0.05
+r_05 = round(price / 0.05) * 0.05
+
+# 5. Price converted to int using multiple methods
+int_1 = int(price)          # Truncates (removes the decimal part)
+int_2 = round(price)        # Rounds to nearest integer
+int_3 = math.trunc(price)   # Explicitly truncates (same as int() for positive numbers)
+
+print(f"Original Price: {price}")
+print(f"Rounded to 2 decimals: {r_2}")
+print(f"Rounded UP (Ceil): {r_up}")
+print(f"Rounded DOWN (Floor): {r_down}")
+print(f"Rounded to nearest 0.05: {r_05}")
+print(f"Converted to int (int()): {int_1}")
+print(f"Converted to int (round()): {int_2}")
+print(f"Converted to int (trunc()): {int_3}")
+
+print("\nExplanation:")
+print(" - round(x, 2) is Python's standard rounding (0.5 goes to the nearest even digit).")
+print(" - math.ceil() always rounds up to the next highest integer.")
+print(" - math.floor() always rounds down to the next lowest integer.")
+print(" - int(x) and math.trunc() both discard the decimal part, moving toward zero.")
+print("=" * 10 + " End of Task 7 " + "=" * 10)
+
+
+# --- TASK 8: Advanced Conditional Flow (No try/except) ---
+print("\n" + "=" * 10 + " TASK 8: Advanced Conditional Flow " + "=" * 10)
+
+# Simulate input functions for Task 8
+def get_user(prompt):
+    # We use the generic simulation helper here
+    return get_simulated_input(8, prompt)
+
+username = get_user("Task 8: Enter username:")
+pin = get_user("Task 8: Enter PIN:")
+
+print(f"Attempting login with user='{username}', pin='{pin}'...")
+
+# 1. Error Check: Empty Username
+if username == "":
+    print("Error: username cannot be empty")
+
+# 2. Error Check: Non-numeric PIN
+elif not pin.isnumeric():
+    print("Error: PIN must be numeric")
+
+# 3. Error Check: PIN has leading zero
+elif len(pin) > 1 and pin.startswith('0'):
+    # Check length > 1 prevents single-digit '0' from triggering this error
+    print("PIN has leading zero — please try again (simulated prompt)")
+
+# 4. Success/Credential Validation (Only runs if NO errors above were found)
+else:
+    if username == 'admin' and pin == '9999':
+        print("Full Access")
+    elif username == 'admin': # Username is 'admin' but pin is incorrect
+        print("Try Again")
+    else: # Username is not 'admin' and not empty
+        print("User Not Found")
+
+print("=" * 10 + " End of Task 8 " + "=" * 10)
+
+
+# --- TASK 9: Conditional Grid ---
+print("\n" + "=" * 10 + " TASK 9: Conditional Grid " + "=" * 10)
+
+try:
+    grid_num_str = get_simulated_input(9, "Task 9: Enter a number 1–9 to replace with 'X':")
+    grid_num = int(grid_num_str)
+except ValueError:
+    print("Error: Invalid input. Please enter an integer 1-9.")
+    grid_num = -1 # Set to an invalid value to skip grid generation
+
+if not 1 <= grid_num <= 9:
+    print("Error: Number must be between 1 and 9.")
+
+else:
+    print("\n--- GRID ---")
+    # Loop through numbers 1 to 9, printing the grid
+    for i in range(1, 10):
+        # We use sys.stdout.write to print without automatic newlines
+        if i == grid_num:
+            sys.stdout.write('X ')
+        else:
+            sys.stdout.write(f'{i} ')
+
+        # Conditional line breaks for the 3x3 grid
+        if i % 3 == 0:
+            sys.stdout.write('\n')
+        
+    sys.stdout.write('\n') # Final newline after the grid
+
+print("=" * 10 + " End of Task 9 " + "=" * 10)
+
+
+# --- TASK 10: Error-Resistant Calculator (Rewrite of Task 5) ---
+print("\n" + "=" * 10 + " TASK 10: Error-Resistant Calculator " + "=" * 10)
+
+# Re-use the lambda dictionary from Task 5
+lambda_operators_10 = {
+    '+': lambda a, b: a + b,
+    '-': lambda a, b: a - b,
+    '*': lambda a, b: a * b,
+    '/': lambda a, b: a / b,
+    '**': lambda a, b: a ** b,
+    '%': lambda a, b: a % b
+}
+
+try:
+    # 1. Get inputs
+    num1_str = get_simulated_input(10, "Task 10: Enter first number:")
+    operator = get_simulated_input(10, "Task 10: Enter operator:")
+    num2_str = get_simulated_input(10, "Task 10: Enter second number:")
+    
+    # 2. Handle non-numeric input (Type Casting Error)
+    try:
+        num1 = float(num1_str)
+        num2 = float(num2_str)
+    except ValueError:
+        raise ValueError("Error: Non-numeric input detected. Both values must be numbers.")
+
+    # 3. Handle invalid operator
+    if operator not in lambda_operators_10:
+        raise ValueError("Error: Invalid operator. Please use one of +, -, *, /, **, %.")
+
+    # 4. Handle division by zero
+    if operator in ('/', '%') and num2 == 0:
+        raise ZeroDivisionError("Error: Division/Modulo by zero is not allowed.")
+
+    # 5. Perform calculation
+    calculation = lambda_operators_10[operator]
+    result = calculation(num1, num2)
+
+    print(f"\nResult: {num1} {operator} {num2} = {result}")
+
+except ZeroDivisionError as e:
+    print(f"--- CALCULATION ERROR ---")
+    print(f"{e}")
+except ValueError as e:
+    print(f"--- INPUT ERROR ---")
+    print(f"{e}")
+except Exception as e:
+    # 6. Catch unexpected edge cases
+    print(f"--- UNEXPECTED EDGE CASE ---")
+    print(f"An unhandled error occurred: {type(e).__name__}: {e}")
+
+print("=" * 10 + " End of Task 10 " + "=" * 10)
+
+
+# --- TASK 11: Nested Conditions Challenge ---
+print("\n" + "=" * 10 + " TASK 11: Nested Conditions Challenge " + "=" * 10)
+
+try:
+    # We will use real input here as per previous interaction, unless simulation is critical
+    a = float(input("Task 11: Enter first number (a): "))
+    b = float(input("Task 11: Enter second number (b): "))
+    c = float(input("Task 11: Enter third number (c): "))
+except ValueError:
+    print("Error: Invalid input. All numbers must be numeric.")
+    # Set safe defaults or exit if critical
+    a, b, c = 0, 0, 0 
+
+largest = None
+median = None
+smallest = None
+
+# Logic to find Largest, Median, and Smallest using nested conditions
+if a >= b and a >= c:
+    largest = a
+    # Nested condition: Determine the order of the remaining two (b and c)
+    if b >= c:
+        median = b
+        smallest = c
+    else:
+        median = c
+        smallest = b
+
+elif b >= a and b >= c:
+    largest = b
+    # Nested condition: Determine the order of the remaining two (a and c)
+    if a >= c:
+        median = a
+        smallest = c
+    else:
+        median = c
+        smallest = a
+
+else: # c must be the largest
+    largest = c
+    # Nested condition: Determine the order of the remaining two (a and b)
+    if a >= b:
+        median = a
+        smallest = b
+    else:
+        median = b
+        smallest = a
+
+print(f"\nGiven numbers: a={a}, b={b}, c={c}")
+print(f"Largest: {largest}")
+print(f"Median: {median}")
+print(f"Smallest: {smallest}")
+
+print("=" * 10 + " End of Task 11 " + "=" * 10)
+
+
+# --- TASK 12: Variable Mutation Engine ---
+print("\n" + "=" * 10 + " TASK 12: Variable Mutation Engine " + "=" * 10)
+
+x = 5
+print(f"Start value of x: {x}")
+
+# Single chained assignment expression:
+# 1. multiply by 2 (5 * 2 = 10)
+# 2. subtract 3 (10 - 3 = 7)
+# 3. raise to power 2 (7 ** 2 = 49)
+# 4. integer divide by 4 (49 // 4 = 12)
+# 5. add 10 (12 + 10 = 22)
+x = ((((x * 2) - 3) ** 2) // 4) + 10
+
+print(f"Final value of x after mutations: {x}")
+
+print("=" * 10 + " End of Task 12 " + "=" * 10)
+
+
+# --- TASK 13: Logic Gate Simulator ---
+print("\n" + "=" * 10 + " TASK 13: Logic Gate Simulator " + "=" * 10)
+
+try:
+    # Get and validate inputs '0' or '1'
+    a_str = get_simulated_input(13, "Task 13: Enter Input A (0 or 1):")
+    b_str = get_simulated_input(13, "Task 13: Enter Input B (0 or 1):")
+
+    if a_str not in ('0', '1') or b_str not in ('0', '1'):
+        raise ValueError("Inputs must be '0' or '1'.")
+
+    # Convert string inputs to boolean values
+    a = bool(int(a_str))
+    b = bool(int(b_str))
+
+    # Simulate Logic Gates using Boolean Logic
+    and_result = a and b
+    or_result = a or b
+    # XOR uses bitwise ^, which works correctly on booleans (True^False == True)
+    xor_result = a ^ b
+    nand_result = not (a and b)
+    nor_result = not (a or b)
+
+    print(f"\nInputs: A={a_str}, B={b_str}")
+    print("-" * 15)
+    # Use int() to convert True/False back to 1/0 for logic gate output
+    print(f"AND (A and B): {int(and_result)}")
+    print(f"OR (A or B):   {int(or_result)}")
+    print(f"XOR (A ^ B):   {int(xor_result)}")
+    print(f"NAND (not (A and B)): {int(nand_result)}")
+    print(f"NOR (not (A or B)): {int(nor_result)}")
+
+except Exception as e:
+    print(f"An error occurred: {e}")
+
+print("=" * 10 + " End of Task 13 " + "=" * 10)
+
+
+# --- TASK 14: Bitwise Judge ---
+print("\n" + "=" * 10 + " TASK 14: Bitwise Judge " + "=" * 10)
+
+try:
+    num_str = get_simulated_input(14, "Task 14: Enter a number for bitwise check:")
+    num = int(num_str)
+    
+    if num < 0:
+        raise ValueError("Please enter a non-negative integer.")
+
+    print(f"\nNumber: {num} (Binary: {bin(num)})")
+
+    # Check 1: Is the 3rd bit set? (Bit 3 corresponds to value 8, 1 << 3)
+    mask_3rd_bit = 1 << 3
+    is_3rd_bit_set = (num & mask_3rd_bit) != 0
+
+    print(f"1. Is the 3rd bit (value 8) set? {'Yes' if is_3rd_bit_set else 'No'}")
+
+
+    # Check 2: Does the number have an even number of bits in its binary form?
+    binary_string = bin(num)[2:]
+    num_bits = len(binary_string)
+    has_even_bits = (num_bits % 2) == 0
+
+    print(f"2. Total number of bits ({num_bits}): {'Even' if has_even_bits else 'Odd'}")
+
+
+    # Check 3: If toggling bit #1 makes it odd or even
+    # Toggling bit #1 (value 2, 1 << 1)
+    mask_bit_1 = 1 << 1
+    toggled_num = num ^ mask_bit_1 # XOR flips the bit
+    is_toggled_odd = (toggled_num % 2) != 0
+
+    print(f"3. Toggling bit #1 ({mask_bit_1}) results in: {'Odd' if is_toggled_odd else 'Even'} number ({toggled_num})")
+
+
+    # Check 4: Print full binary comparison
+    max_len = max(len(bin(num)), len(bin(toggled_num))) - 2
+    
+    print("\n4. Full Binary Comparison:")
+    print(f"  Original ({num}):    {bin(num)[2:].zfill(max_len)}")
+    print(f"  Toggled ({toggled_num}):     {bin(toggled_num)[2:].zfill(max_len)}")
+
+
+except Exception as e:
+    print(f"An error occurred: {e}")
+
+print("=" * 10 + " End of Task 14 " + "=" * 10)
+
+
+# --- TASK 15: Grading Machine ---
+print("\n" + "=" * 10 + " TASK 15: Grading Machine " + "=" * 10)
+
+# Helper function to check for primality
+def is_prime(n):
+    if n <= 1: return False
+    if n <= 3: return True
+    if n % 2 == 0 or n % 3 == 0: return False
+    i = 5
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
+            return False
+        i += 6
+    return True
+
+try:
+    score_str = get_simulated_input(15, "Task 15: Enter score (0–100):")
+    score = int(score_str)
+
+    if not 0 <= score <= 100:
+        raise ValueError("Score must be between 0 and 100.")
+
+    base_grade = ""
+    modifier = ""
+
+    # Basic Grading Rules
+    if score >= 90:
+        base_grade = "A"
+    elif score >= 80:
+        base_grade = "B"
+    elif score >= 70:
+        base_grade = "C"
+    elif score >= 60:
+        base_grade = "D"
+    else:
+        base_grade = "F"
+
+    # Advanced Grading Rules (Modifiers)
+    if is_prime(score):
+        modifier += "+" # Prime score
+    
+    # Check if divisible by 10 (score != 0 avoids '0*' which is usually not desired)
+    if score != 0 and score % 10 == 0:
+        modifier += "*"
+
+    final_grade = base_grade + modifier
+
+    print(f"\nScore: {score}")
+    print(f"Base Grade: {base_grade}")
+    print(f"Final Grade: {final_grade}")
+
+except ValueError as e:
+    print(f"Error: {e}")
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")
+
+print("=" * 10 + " End of Task 15 " + "=" * 10)
+
+
+# --- TASK 16: Error Handling With Custom Messages ---
+print("\n" + "=" * 10 + " TASK 16: Error Handling With Custom Messages " + "=" * 10)
+
+# 1. Define a custom exception
+class NegativeDenominatorError(Exception):
+    """Raised when the second number (denominator) in a division is negative."""
+    pass
+
+try:
+    num1_str = get_simulated_input(16, "Task 16: Enter numerator (first number):")
+    num2_str = get_simulated_input(16, "Task 16: Enter denominator (second number):")
+
+    # Try 1: Conversion (handles non-numeric input)
+    try:
+        num1 = float(num1_str)
+        num2 = float(num2_str)
+    except ValueError:
+        raise ValueError("Error: Both inputs must be valid numeric values.")
+
+    # Try 2: Custom Exception Check
+    if num2 < 0:
+        raise NegativeDenominatorError("Custom Error: Denominator cannot be negative for this operation.")
+    
+    # Try 3: Division (handles division by zero)
+    result = num1 / num2
+    
+    print(f"\nResult of {num1} / {num2} = {result}")
+
+# Catch specific exceptions in order of specificity
+except NegativeDenominatorError as e:
+    print(f"--- CAUGHT CUSTOM ERROR ---")
+    print(f"{e}")
+
+except ZeroDivisionError:
+    print(f"--- CAUGHT BUILT-IN ERROR ---")
+    print("ZeroDivisionError: Cannot divide by zero. Please use a non-zero denominator.")
+
+except ValueError as e:
+    print(f"--- CAUGHT VALUE ERROR ---")
+    print(f"{e}")
+
+except Exception as e:
+    print(f"--- CAUGHT UNEXPECTED ERROR ---")
+    print(f"An unexpected error occurred: {type(e).__name__}: {e}")
+
+print("=" * 10 + " End of Task 16 " + "=" * 10)
+
+
+# --- TASK 17: Indentation Trap (Fixing the code snippet) ---
+print("\n" + "=" * 10 + " TASK 17: Indentation Trap " + "=" * 10)
+
+x = 10
+# Set up necessary loop control variable for the fix
+i = 0 
+
+# The fixed code, respecting the original lines and fixing indentation:
+if x > 5:
+    print("Start")
+    for i in range(3):
+        print(i)
+        if i == 1:
+            print("Middle")
+    print("Done") # This line is indented once, running after the loop finishes.
+
+print("--- End of Task 17 Block ---")
+print("=" * 10 + " End of Task 17 " + "=" * 10)
+
+
+# --- TASK 18: Combine Everything (Full Mini-Project) ---
+print("\n" + "=" * 10 + " TASK 18: Combine Everything " + "=" * 10)
+
+# Re-use lambda operators from Task 5/10
+lambda_operators_18 = {
+    '+': lambda a, b: a + b,
+    '-': lambda a, b: a - b,
+    '*': lambda a, b: a * b,
+    '/': lambda a, b: a / b,
+    '**': lambda a, b: a ** b,
+    '%': lambda a, b: a % b
+}
+
+try:
+    # 1. Parse the input (tokenize)
+    raw_input = get_simulated_input(18, "Task 18: Enter expression (e.g., 52*8 or 100/3):")
+    
+    # Identify the operator and split the string
+    operator = next((op for op in lambda_operators_18 if op in raw_input), None)
+
+    if not operator:
+        raise ValueError("Invalid format or operator. Must be N OPERATOR N.")
+
+    parts = raw_input.split(operator)
+    if len(parts) != 2:
+        raise ValueError("Invalid format. Ensure only one operator is used.")
+    
+    num1_str = parts[0].strip()
+    num2_str = parts[1].strip()
+
+    # 4. Handle type casting (conversion)
+    try:
+        num1 = float(num1_str)
+        num2 = float(num2_str)
+    except ValueError:
+        raise ValueError("Non-numeric input detected for one or both values.")
+
+    # 2. Validate using conditionals & 6. Handle errors
+    if operator in ('/', '%') and num2 == 0:
+        raise ZeroDivisionError("Division/Modulo by zero is not allowed.")
+
+    # 3. Use lambda operators
+    calculation = lambda_operators_18[operator]
+    result = calculation(num1, num2)
+
+    # 5. Round result to 3 decimals
+    rounded_result = round(result, 3)
+    
+    # Output formatting
+    expression = f"{num1_str}{operator}{num2_str}"
+    
+    print("\n--- RESULT ---")
+    print(f"Expression: {expression}")
+    print(f"Value: {result}")
+    # Convert to integer first before bin()
+    print(f"Binary: {bin(int(result))}") 
+    print(f"Rounded: {rounded_result}")
+    print("------------")
+
+except ZeroDivisionError as e:
+    print(f"--- ERROR ---")
+    print(f"Calculation Error: {e}")
+except ValueError as e:
+    print(f"--- ERROR ---")
+    print(f"Input Error: {e}")
+except Exception as e:
+    print(f"--- UNEXPECTED ERROR ---")
+    print(f"An unexpected error occurred: {type(e).__name__}: {e}")
+
+print("=" * 10 + " End of Task 18 " + "=" * 10)
+
+
+# --- TASK 19: Multi-Condition Puzzle ---
+print("\n" + "=" * 10 + " TASK 19: Multi-Condition Puzzle " + "=" * 10)
+
+try:
+    num_str = get_simulated_input(19, "Task 19: Enter any integer:")
+    num = int(num_str)
+    
+    if num < 0:
+        print("Note: Using the absolute value for primality and square checks.")
+        abs_num = abs(num)
+    else:
+        abs_num = num
+
+    if abs_num == 0:
+        print("Result for 0: Zero")
+    else:
+        output_results = []
+        
+        # Divisibility Checks (Order matters for FizzBuzz)
+        if abs_num % 15 == 0:
+            output_results.append('FizzBuzz')
+        elif abs_num % 3 == 0:
+            output_results.append('Fizz')
+        elif abs_num % 5 == 0:
+            output_results.append('Buzz')
+            
+        # Primality Check (using helper from Task 15)
+        if is_prime(abs_num):
+            output_results.append('Prime')
+
+        # Perfect Square Check
+        is_square = False
+        if abs_num >= 0: # isqrt requires non-negative number
+            root = math.isqrt(abs_num)
+            is_square = (root * root) == abs_num
+            
+        if is_square:
+            output_results.append('Square')
+
+        # Lucky Check (contains digit 7)
+        if '7' in str(abs_num):
+            output_results.append('Lucky')
+
+        # Even/Odd Check
+        if abs_num % 2 == 0:
+            output_results.append('Even')
+        else:
+            output_results.append('Odd')
+
+        # Size Check
+        if abs_num < 10:
+            output_results.append('Small')
+        elif abs_num < 100:
+            output_results.append('Medium')
+        else:
+            output_results.append('Large')
+        
+        print(f"\nResults for {num}:")
+        # Print each condition on a new line
+        for res in output_results:
+            print(f"- {res}")
+
+except ValueError:
+    print("Error: Invalid input. Please enter a valid integer.")
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")
+
+print("=" * 10 + " End of Task 19 " + "=" * 10)
+
+
+# --- TASK 20: Brain-Burner Final Task (No lists, loops, or recursion) ---
+print("\n" + "=" * 10 + " TASK 20: Brain-Burner Final Task " + "=" * 10)
+
+try:
+    num_str = get_simulated_input(20, "Task 20: Enter an integer 100-999:")
+    num = int(num_str)
+    
+    if not 100 <= num <= 999:
+        raise ValueError("Input must be between 100 and 999.")
+
+    # 1. Print its digits individually (using integer arithmetic)
+    d3 = num % 10          # Last digit (Units)
+    d2 = (num // 10) % 10  # Middle digit (Tens)
+    d1 = num // 100        # First digit (Hundreds)
+    
+    print(f"\nInput Number: {num}")
+    print(f"Digits: {d1}, {d2}, {d3}")
+
+    # 2. Prints the largest digit (using nested conditions)
+    largest_digit = None
+    # We use a compact chained conditional for finding the maximum, although the 
+    # nested if/elif structure from Task 11 also works:
+    # Option 1 (Nested If/Elif):
+    if d1 >= d2 and d1 >= d3:
+        largest_digit = d1
+    elif d2 >= d3:
+        largest_digit = d2
+    else:
+        largest_digit = d3
+    
+    print(f"Largest Digit: {largest_digit}")
+
+    # 3. Prints whether digits are strictly increasing (e.g., 1 < 4 < 7)
+    if d1 < d2 and d2 < d3:
+        print("Digits are strictly increasing: Yes")
+    else:
+        print("Digits are strictly increasing: No")
+
+    # 4. Prints whether the sum of digits is even
+    sum_of_digits = d1 + d2 + d3
+    
+    if sum_of_digits % 2 == 0:
+        print(f"Sum of Digits ({sum_of_digits}) is: Even")
+    else:
+        print(f"Sum of Digits ({sum_of_digits}) is: Odd")
+
+except ValueError as e:
+    print(f"Error: {e}")
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")
+
+print("=" * 10 + " End of Task 20 " + "=" * 10)
